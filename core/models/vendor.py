@@ -1,6 +1,6 @@
 from django.db import models
 
-from core.models import CoreModel
+from core.models.core import CoreModel
 
 
 class Vendor(CoreModel):
@@ -16,7 +16,7 @@ class Vendor(CoreModel):
     fulfillment_rate = models.FloatField()
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
     class Meta:
         indexes = [

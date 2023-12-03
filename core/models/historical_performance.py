@@ -1,9 +1,9 @@
 from django.db import models
 
-from core.models import Vendor
+from core.models import CoreModel, Vendor
 
 
-class HistoricalPerformance(models.Model):
+class HistoricalPerformance(CoreModel):
     """Model which holds vendors historical Perofmatnce"""
 
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)

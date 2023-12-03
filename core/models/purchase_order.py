@@ -1,9 +1,9 @@
 from django.db import models
 
-from core.models import Vendor
+from core.models import Vendor, CoreModel
 
 
-class PurchaseOrder(models.Model):
+class PurchaseOrder(CoreModel):
     """Model which holds vendors PO meta"""
 
     STATUS_CHOICES = [

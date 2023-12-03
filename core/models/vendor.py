@@ -1,7 +1,9 @@
 from django.db import models
 
+from core.models import CoreModel
 
-class Vendor(models.Model):
+
+class Vendor(CoreModel):
     """Model which holds vendor's meta"""
 
     name = models.CharField(max_length=255)

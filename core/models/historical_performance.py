@@ -14,6 +14,8 @@ class HistoricalPerformance(CoreModel):
     average_response_time = models.FloatField()
     fulfillment_rate = models.FloatField()
 
+    INSTANCE_LOOKUP_KEY = "vendor_id"
+
     def __str__(self):
         return f"{self.vendor.name} - {self.date}"
 

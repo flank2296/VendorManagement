@@ -1,7 +1,8 @@
 from django.urls import path
-from core.models.vendor import Vendor
 
+from core.models.vendor import Vendor
 from core.views.views import GenericView
+
 from .auth import UserLogin, UserLogout, ping
 
 core_urlpatterns = [

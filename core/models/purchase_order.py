@@ -1,8 +1,9 @@
 import math
+
 from django.db import models
 
-from core.models.vendor import Vendor
 from core.models.core import CoreModel
+from core.models.vendor import Vendor
 
 
 class PurchaseOrder(CoreModel):

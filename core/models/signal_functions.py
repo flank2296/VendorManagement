@@ -1,10 +1,11 @@
 import math
-from django.db import models
 
-from django.dispatch import receiver
+from django.db import models
 from django.db.models.signals import post_save
-from core.models.purchase_order import PurchaseOrder
+from django.dispatch import receiver
+
 from core.models.historical_performance import HistoricalPerformance
+from core.models.purchase_order import PurchaseOrder
 
 
 @receiver(post_save, sender=PurchaseOrder)

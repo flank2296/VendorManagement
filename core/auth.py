@@ -1,10 +1,11 @@
 import json
-from django.views import View
+
+from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
+from django.http.response import HttpResponseForbidden
 from django.middleware.csrf import rotate_token
 from django.utils.decorators import method_decorator
-from django.http.response import HttpResponseForbidden
-from django.contrib.auth import authenticate, login, logout
+from django.views import View
 
 from .decorators import authenticate_superuser
 

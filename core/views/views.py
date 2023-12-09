@@ -1,9 +1,10 @@
-from copy import deepcopy
 import traceback
+from copy import deepcopy
+
 from django.conf import settings
-from rest_framework.views import APIView
-from django.utils.decorators import method_decorator
 from django.http import HttpResponseServerError, JsonResponse
+from django.utils.decorators import method_decorator
+from rest_framework.views import APIView
 
 from core.decorators import authenticate_superuser
 
@@ -35,7 +36,10 @@ class GenericView(APIView):
             if not self.model:
                 raise Exception("Invalid model name passed in the URL!")
 
-            [kwargs.pop(key) for key in self.model.FIELDS_TO_IGNORE_WHILE_CREATION]
+            [
+                kwargs.pop(key, None)
+                for key in self.model.FIELDS_TO_IGNORE_WHILE_CREATION
+            ]
             instance = self.model(**kwargs)
             instance.save()
             return JsonResponse(

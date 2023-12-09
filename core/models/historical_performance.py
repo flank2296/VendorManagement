@@ -5,7 +5,7 @@ from core.models.core import CoreModel
 
 
 class HistoricalPerformance(CoreModel):
-    """Model which holds vendors historical Perofmatnce"""
+    """Model which holds vendors historical Performance"""
 
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     date = models.DateTimeField()

@@ -12,6 +12,11 @@ class CoreModel(models.Model):
     class Meta:
         abstract = True
 
+    @property
+    def is_new(self):
+        """Checks if the instance is new or already created"""
+        return bool(self.pk)
+
     def validate(self, *args, **kwargs):
         """Extend this method in model to add validations"""
         return

@@ -1,3 +1,4 @@
+import math
 from django.db import models
 
 from core.models.vendor import Vendor
@@ -21,12 +22,14 @@ class PurchaseOrder(CoreModel):
     po_number = models.CharField(max_length=50, unique=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     order_date = models.DateTimeField()
-    delivery_date = models.DateTimeField()
+
+    # Added 2 dates for delivery. Expected and actual
+    delivery_date = models.DateTimeField(null=True, blank=True)
+    expected_delivery_date = models.DateTimeField(null=True, blank=True)
+
     items = models.JSONField()
     quantity = models.IntegerField()
-    _status = models.CharField(
-        max_length=50, choices=STATUS_CHOICES, db_column="status"
-    )
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES, db_column="status")
     quality_rating = models.FloatField(null=True, blank=True)
     issue_date = models.DateTimeField()
     acknowledgment_date = models.DateTimeField(null=True, blank=True)
@@ -38,49 +41,79 @@ class PurchaseOrder(CoreModel):
     def __str__(self):
         return f"PO #{self.po_number} - {self.vendor.name}"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["status"]),
+            models.Index(fields=["po_number"]),
+            models.Index(fields=["issue_date"]),
+            models.Index(fields=["order_date"]),
+            models.Index(fields=["delivery_date"]),
+            models.Index(fields=["acknowledgment_date"]),
+            models.Index(fields=["expected_delivery_date"]),
+        ]
+        db_table = "PurchaseOrder"
+
+    def before_save(self, *args, **kwargs):
+        """Overrides before save method of base model"""
+        if self.status not in PurchaseOrder.VALID_STATUSES:
+            raise ValueError("Invalid status option passed for updating")
+
+        if self.is_new:
+            return
+
+        old_instance = PurchaseOrder.objects.get(pk=self.pk)
+        self.is_status_changed = self.status != old_instance
+        self.is_acknowledging_now = (
+            self.acknowledgment_date and not old_instance.acknowledgment_date
+        )
+
     @property
     def is_completed(self):
         """A property which tells if the current PO is completed or not"""
         return self.status == PurchaseOrder.STATUS_COMPLETED
 
-    @property
-    def status(self):
-        """Getter for status"""
-        return self._status
+    @classmethod
+    def calculate_on_time_deliveries_for_vendor(
+        cls, completed_deliveries_for_current_vendor=[]
+    ):
+        """Calculates all on time deliveries for a vendor"""
+        total_completed_deliveries = len(completed_deliveries_for_current_vendor)
+        # If there are no total completed orders
+        if not total_completed_deliveries:
+            return 0
 
-    @status.setter
-    def status(self, status_to_update=""):
-        """A setter function for changing status of a PO"""
-        if status_to_update not in PurchaseOrder.VALID_STATUSES:
-            raise ValueError("Invalid status option passed for updating")
-
-        self.is_status_changed = self.status != status_to_update
-        self._status = status_to_update
-
-    def after_save(self, *args, **kwargs):
-        """Overrides core models after save action to support actions"""
-        if current_status := self.is_status_changed and self.is_completed:
-            # ToDo - Ankush. Calculate on time delivery rate
-            if current_status and self.quality_rating:
-                # ToDo - Ankush. Calculate quality rating average
-                pass
-            pass
-
-        if self.is_status_changed:
-            # ToDo - Ankush. calculate fulfilment rate
-            pass
-
-        if self.is_acknowledging_now:
-            # ToDo - Calculate average response time
-            pass
-
-    class Meta:
-        indexes = [
-            models.Index(fields=["po_number"]),
-            models.Index(fields=["order_date"]),
-            models.Index(fields=["delivery_date"]),
-            models.Index(fields=["_status"]),
-            models.Index(fields=["issue_date"]),
-            models.Index(fields=["acknowledgment_date"]),
+        on_time_deliveries = [
+            delivery
+            for delivery in completed_deliveries_for_current_vendor
+            if (
+                delivery.get("delivery_date") is not None
+                and delivery.get("expected_delivery_date") is not None
+                and delivery.get("delivery_date")
+                <= delivery.get("expected_delivery_date")
+            )
         ]
-        db_table = "PurchaseOrder"
+
+        # If there are no on time deliveries
+        if not on_time_deliveries:
+            return 0
+
+        return math.round(
+            float(len(on_time_deliveries)) / float(total_completed_deliveries), 2
+        )
+
+    @classmethod
+    def calculate_quality_rating_avg(cls, completed_deliveries_for_current_vendor=[]):
+        """Calculates average of quality ratings of completed orders for a vendor"""
+        if not completed_deliveries_for_current_vendor:
+            return Exception("Invalid vendor id!")
+
+        all_ratings = [
+            delivery.get("quality_rating")
+            for delivery in completed_deliveries_for_current_vendor
+            if delivery.get("quality_rating") is not None
+        ]
+        return (
+            math.round(float(sum(all_ratings)) / len(all_ratings), 2)
+            if all_ratings
+            else None
+        )

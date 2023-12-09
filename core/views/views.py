@@ -17,6 +17,7 @@ class GenericView(APIView):
     def get(self, request, instance_id=None, *args, **kwargs):
         if not self.model:
             raise Exception("Invalid model name passed in the URL!")
+
         filters = deepcopy(self.model.INSTANCE_FETCHING_FILTERES)
         instance_id and filters.update(
             {f"{self.model.INSTANCE_LOOKUP_KEY}__in": [instance_id]}
@@ -31,7 +32,10 @@ class GenericView(APIView):
     def post(self, request, *args, **kwargs):
         """Generic insert view. Expects a model in the URL"""
         try:
-            {kwargs.pop(key) for key in self.model.FIELDS_TO_IGNORE_WHILE_CREATION}
+            if not self.model:
+                raise Exception("Invalid model name passed in the URL!")
+
+            [kwargs.pop(key) for key in self.model.FIELDS_TO_IGNORE_WHILE_CREATION]
             instance = self.model(**kwargs)
             instance.save()
             return JsonResponse(
@@ -46,13 +50,15 @@ class GenericView(APIView):
         try:
             if not instance_id:
                 raise Exception("Invalid instance id passed for updating!")
+            if not self.model:
+                raise Exception("Invalid model name passed in the URL!")
 
             try:
                 instance = self.model.objects.get(pk=instance_id)
             except:
                 return HttpResponseServerError("Instance does not exists!")
 
-            {setattr(instance, key, val) for key, val in kwargs.items()}
+            [setattr(instance, key, val) for key, val in kwargs.items()]
             instance.save()
             return JsonResponse(
                 {"instance": self.model.get_model_serializer()(instance).data}

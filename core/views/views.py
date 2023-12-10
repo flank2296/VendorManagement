@@ -1,9 +1,7 @@
 import json
-import traceback
 from copy import deepcopy
 
-from django.conf import settings
-from django.http import HttpResponseServerError, JsonResponse
+from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 
@@ -33,58 +31,39 @@ class GenericView(APIView):
 
     def post(self, request, *args, **kwargs):
         """Generic insert view. Expects a model in the URL"""
-        try:
-            payload = json.loads(request.body)
-            if not self.model:
-                raise Exception("Invalid model name passed in the URL!")
+        payload = json.loads(request.body)
+        if not self.model:
+            raise Exception("Invalid model name passed in the URL!")
 
-            [
-                payload.pop(key, None)
-                for key in self.model.FIELDS_TO_IGNORE_WHILE_CREATION
-            ]
-            instance = self.model(**payload)
-            instance.save()
-            return JsonResponse(
-                {"instance": self.model.get_model_serializer()(instance).data}
-            )
-        except:
-            settings.DEBUG and traceback.print_exc()
-            return HttpResponseServerError("Some exception occured!")
+        [payload.pop(key, None) for key in self.model.FIELDS_TO_IGNORE_WHILE_CREATION]
+        instance = self.model(**payload)
+        instance.save()
+        return JsonResponse(
+            {"instance": self.model.get_model_serializer()(instance).data}
+        )
 
     def put(self, request, instance_id, *args, **kwargs):
         """Generic put view. Expects a instance id in the URL pattern"""
-        try:
-            payload = json.loads(request.body)
+        payload = json.loads(request.body)
 
-            if not instance_id:
-                raise Exception("Invalid instance id passed for updating!")
-            if not self.model:
-                raise Exception("Invalid model name passed in the URL!")
+        if not instance_id:
+            raise Exception("Invalid instance id passed for updating!")
+        if not self.model:
+            raise Exception("Invalid model name passed in the URL!")
 
-            try:
-                instance = self.model.objects.get(pk=instance_id)
-            except:
-                return HttpResponseServerError("Instance does not exists!")
-
-            [setattr(instance, key, val) for key, val in payload.items()]
-            instance.save()
-            return JsonResponse(
-                {"instance": self.model.get_model_serializer()(instance).data}
-            )
-        except:
-            settings.DEBUG and traceback.print_exc()
-            return HttpResponseServerError("Some error occured!")
+        instance = self.model.objects.get(pk=instance_id)
+        [setattr(instance, key, val) for key, val in payload.items()]
+        instance.save()
+        return JsonResponse(
+            {"instance": self.model.get_model_serializer()(instance).data}
+        )
 
     def delete(self, request, instance_id, *args, **kwargs):
         """Generic Delete action on model level"""
-        try:
-            if not instance_id:
-                raise Exception("Invalid instance id passed for updating!")
-            if not self.model:
-                raise Exception("Invalid model name passed in the URL!")
+        if not instance_id:
+            raise Exception("Invalid instance id passed for updating!")
+        if not self.model:
+            raise Exception("Invalid model name passed in the URL!")
 
-            self.model.objects.filter(pk=instance_id).delete()
-            return JsonResponse({"message": "successfully deleted!"})
-        except:
-            settings.DEBUG and traceback.print_exc()
-            return HttpResponseServerError("Some error occured!")
+        self.model.objects.filter(pk=instance_id).delete()
+        return JsonResponse({"message": "successfully deleted!"})

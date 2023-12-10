@@ -42,6 +42,12 @@ class PurchaseOrder(CoreModel):
     def __str__(self):
         return f"PO #{self.po_number} - {self.vendor.name}"
 
+    @classmethod
+    def get_model_serializer(cls):
+        from core.serializers.purchase_order import PurchaseOrdersSerializer
+
+        return PurchaseOrdersSerializer
+
     class Meta:
         indexes = [
             models.Index(fields=["status"]),

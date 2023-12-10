@@ -19,6 +19,14 @@ class HistoricalPerformance(CoreModel):
     def __str__(self):
         return f"{self.vendor.name} - {self.date}"
 
+    @classmethod
+    def get_model_serializer(cls):
+        from core.serializers.historical_performance import (
+            HistoricalPerformanceSerializer,
+        )
+
+        return HistoricalPerformanceSerializer
+
     class Meta:
         indexes = [
             models.Index(fields=["date"]),

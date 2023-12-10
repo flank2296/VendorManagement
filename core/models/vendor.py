@@ -16,7 +16,6 @@ class Vendor(CoreModel):
     fulfillment_rate = models.FloatField()
     is_disabled = models.BooleanField(default=False)
 
-    INSTANCE_LOOKUP_KEY = "pk"
     INSTANCE_FETCHING_FILTERES = {"is_disabled": False}
 
     @classmethod

@@ -6,6 +6,7 @@ from django.db import models
 class CoreModel(models.Model):
     """Core model which adds basic utilites to a model"""
 
+    INSTANCE_LOOKUP_KEY = "pk"
     INSTANCE_FETCHING_FILTERES = {}
     FIELDS_TO_IGNORE_WHILE_CREATION = ["pk", "created_at", "updated_at"]
 

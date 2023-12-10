@@ -22,7 +22,7 @@ class PurchaseOrder(CoreModel):
 
     po_number = models.CharField(max_length=50, unique=True)
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
-    order_date = models.DateTimeField()
+    order_date = models.DateTimeField(auto_now_add=True)
 
     # Added 2 dates for delivery. Expected and actual
     delivery_date = models.DateTimeField(null=True, blank=True)
@@ -32,7 +32,7 @@ class PurchaseOrder(CoreModel):
     quantity = models.IntegerField()
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, db_column="status")
     quality_rating = models.FloatField(null=True, blank=True)
-    issue_date = models.DateTimeField()
+    issue_date = models.DateTimeField(null=True)
     acknowledgment_date = models.DateTimeField(null=True, blank=True)
 
     # Custom class attibutes used for manipulating functionalities

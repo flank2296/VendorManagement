@@ -1,3 +1,4 @@
+import json
 import traceback
 from copy import deepcopy
 
@@ -33,14 +34,15 @@ class GenericView(APIView):
     def post(self, request, *args, **kwargs):
         """Generic insert view. Expects a model in the URL"""
         try:
+            payload = json.loads(request.body)
             if not self.model:
                 raise Exception("Invalid model name passed in the URL!")
 
             [
-                kwargs.pop(key, None)
+                payload.pop(key, None)
                 for key in self.model.FIELDS_TO_IGNORE_WHILE_CREATION
             ]
-            instance = self.model(**kwargs)
+            instance = self.model(**payload)
             instance.save()
             return JsonResponse(
                 {"instance": self.model.get_model_serializer()(instance).data}
@@ -52,6 +54,8 @@ class GenericView(APIView):
     def put(self, request, instance_id, *args, **kwargs):
         """Generic put view. Expects a instance id in the URL pattern"""
         try:
+            payload = json.loads(request.body)
+
             if not instance_id:
                 raise Exception("Invalid instance id passed for updating!")
             if not self.model:
@@ -62,7 +66,7 @@ class GenericView(APIView):
             except:
                 return HttpResponseServerError("Instance does not exists!")
 
-            [setattr(instance, key, val) for key, val in kwargs.items()]
+            [setattr(instance, key, val) for key, val in payload.items()]
             instance.save()
             return JsonResponse(
                 {"instance": self.model.get_model_serializer()(instance).data}

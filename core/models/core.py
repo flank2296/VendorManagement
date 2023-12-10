@@ -24,7 +24,7 @@ class CoreModel(models.Model):
     @property
     def is_new(self):
         """Checks if the instance is new or already created"""
-        return bool(self.pk)
+        return not bool(self.pk)
 
     def validate(self, *args, **kwargs):
         """Extend this method in model to add validations"""

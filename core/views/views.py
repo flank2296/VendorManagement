@@ -73,4 +73,18 @@ class GenericView(APIView):
             )
         except:
             settings.DEBUG and traceback.print_exc()
-            return HttpResponseServerError("Some error occured")
+            return HttpResponseServerError("Some error occured!")
+
+    def delete(self, request, instance_id, *args, **kwargs):
+        """Generic Delete action on model level"""
+        try:
+            if not instance_id:
+                raise Exception("Invalid instance id passed for updating!")
+            if not self.model:
+                raise Exception("Invalid model name passed in the URL!")
+
+            self.model.objects.filter(pk=instance_id).delete()
+            return JsonResponse({"message": "successfully deleted!"})
+        except:
+            settings.DEBUG and traceback.print_exc()
+            return HttpResponseServerError("Some error occured!")

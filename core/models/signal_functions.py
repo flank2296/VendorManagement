@@ -53,6 +53,7 @@ def purchase_order_post_save(
         vendors_perf.fulfillment_rate = math.round(
             len(completed_orders_for_vendor) / no_of_vendor_orders, 2
         )
+        historical_fields_to_update.append("fulfillment_rate")
 
     historical_fields_to_update and vendors_perf.save(
         update_fields=historical_fields_to_update

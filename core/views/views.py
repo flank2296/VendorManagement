@@ -68,3 +68,26 @@ class GenericView(APIView):
 
         self.model.objects.filter(pk=instance_id).delete()
         return JsonResponse({"message": "successfully deleted!"})
+
+
+class GenericActionView(APIView):
+    """Generic action view for a model. Expects a model method in the URL"""
+
+    model = None
+
+    def post(self, request, action, instance_id, *args, **kwargs):
+        """Generic action endpoint"""
+        if not self.model or not action:
+            raise Exception("Invalid model name passed in the URL!")
+
+        method = getattr(self.model, action, None)
+        if not method:
+            raise Exception(f"Invalid action {action} passed in the URL!")
+
+        payload = json.loads(request.body or {})
+        method_result = method(instance_id, payload, *args, **kwargs) or {}
+        return JsonResponse(
+            {
+                "message": f"{action} is completed {'successfully' if method_result else 'failed'}",
+            }
+        )

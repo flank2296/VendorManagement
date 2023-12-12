@@ -1,6 +1,7 @@
 import math
 
 from django.db import models
+from django.utils import timezone
 
 from core.models.core import CoreModel
 from core.models.vendor import Vendor
@@ -124,3 +125,21 @@ class PurchaseOrder(CoreModel):
             if all_ratings
             else None
         )
+
+    @classmethod
+    def acknowledge(cls, instance_id, payload, *args, **kwargs):
+        """A method used for acknowledgement of a purchase order."""
+        if not payload.get("purchase_order_id"):
+            raise ValueError("Invalid payload!")
+
+        purchase_order = cls.objects.filter(pk=instance_id)
+        if not purchase_order.exists():
+            raise ValueError("Purchase order does not exist")
+
+        purchase_order = purchase_order.first()
+        if purchase_order.acknowledgment_date:
+            raise ValueError("Purchase order already acknowledged")
+
+        purchase_order.acknowledgment_date = timezone.now()
+        purchase_order.save(update_filds=["acknowledgment_date"])
+        return True

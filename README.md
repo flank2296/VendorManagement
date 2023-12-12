@@ -2,11 +2,11 @@
 
 This system handles vendor profiles, track purchase orders, and calculate vendor performance metrics
 
-####Requirements
+#### Requirements -
 - Python 3.12
 - Mysql 8.2.0
 
-###Installation Guide -
+#### Installation Guide -
 - Install poetry. Read more at [https://python-poetry.org/docs/]
 - After installing poetry, Go to VendorManagement directory and create a type `poetry shell`. This will create a new virtual environment.
 - After this, make sure that you are in the directory where `pyproject.toml` is present and type `portry install`. This will install all dependencies that are needed for running this application.

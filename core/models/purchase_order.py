@@ -129,7 +129,7 @@ class PurchaseOrder(CoreModel):
     @classmethod
     def acknowledge(cls, instance_id, payload, *args, **kwargs):
         """A method used for acknowledgement of a purchase order."""
-        if not payload.get("purchase_order_id"):
+        if not instance_id:
             raise ValueError("Invalid payload!")
 
         purchase_order = cls.objects.filter(pk=instance_id)
@@ -141,5 +141,5 @@ class PurchaseOrder(CoreModel):
             raise ValueError("Purchase order already acknowledged")
 
         purchase_order.acknowledgment_date = timezone.now()
-        purchase_order.save(update_filds=["acknowledgment_date"])
+        purchase_order.save(update_fields=["acknowledgment_date"])
         return True

@@ -1,0 +1,312 @@
+{
+	"info": {
+		"_postman_id": "4928772e-d2d0-4cc1-ba3e-c186c3606c74",
+		"name": "Vendor Management",
+		"description": "Needs a base_url in Globals.\n\nEg - base_url = \"http://localhost:8000\"",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5194384"
+	},
+	"item": [
+		{
+			"name": "Get Vendors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/vendors/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"vendors",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create A Vendor",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Dummy Vendor\",\n    \"contact_details\": \"0000000000\",\n    \"address\": \"Pune\",\n    \"vendor_code\": \"777\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/vendors/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"vendors",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Acknowledge The Purchase Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/purchase_orders/1/acknowledge/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"purchase_orders",
+						"1",
+						"acknowledge",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete A Vendor",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Dummy Vendor\",\n    \"contact_details\": \"0000000000\",\n    \"address\": \"Pune\",\n    \"vendor_code\": \"777\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/vendors/2/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"vendors",
+						"2",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete A Purchase Order",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Dummy Vendor\",\n    \"contact_details\": \"0000000000\",\n    \"address\": \"Pune\",\n    \"vendor_code\": \"777\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/purchase_orders/1/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"purchase_orders",
+						"1",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update A Vendor",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Dummy Vendor 5\",\n    \"contact_details\": \"0000000000\",\n    \"address\": \"Pune\",\n    \"vendor_code\": \"777\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/vendors/5/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"vendors",
+						"5",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create A Purchase Order",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"po_number\": \"12345\",\n    \"items\": { \"name\": \"item_2\" },\n    \"quantity\": 2,\n    \"status\": \"Pending\",\n    \"vendor_id\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/purchase_orders/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"purchase_orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update A Purchase Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"po_number\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/purchase_orders/4/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"purchase_orders",
+						"4",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Purchase Orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/purchase_orders/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"purchase_orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get A Purchase Order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/purchase_orders/4/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"purchase_orders",
+						"4",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Historical Performance For A Vendor",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/vendors/2/performance/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"vendors",
+						"2",
+						"performance",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get A Vendor",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/vendors/5/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"vendors",
+						"5",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

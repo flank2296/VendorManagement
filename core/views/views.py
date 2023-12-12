@@ -1,9 +1,10 @@
 import json
 from copy import deepcopy
 
+from rest_framework.views import APIView
+
 from django.http import JsonResponse
 from django.utils.decorators import method_decorator
-from rest_framework.views import APIView
 
 from core.decorators import authenticate_superuser
 

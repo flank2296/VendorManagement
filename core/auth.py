@@ -7,7 +7,7 @@ from django.middleware.csrf import rotate_token
 from django.utils.decorators import method_decorator
 from django.views import View
 
-from .decorators import authenticate_superuser
+from core.decorators import authenticate_superuser
 
 
 def ping(request):
